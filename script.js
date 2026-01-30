@@ -23,11 +23,12 @@ const rejectionSteps = [
     }
 ];
 
-
 let step = 0;
 let yesBtnSize = 1;
 
 noBtn.addEventListener("click", () => {
+    
+    // If we are still within the steps (0, 1, 2)
     if (step < rejectionSteps.length) {
         const currentData = rejectionSteps[step];
         
@@ -43,20 +44,30 @@ noBtn.addEventListener("click", () => {
         
         step++;
     } 
+    // FIX: If they click "No" AFTER the steps are done, move the button immediately
+    else {
+        moveNoButton();
+    }
     
-    // If last step, run away
+    // If we just finished the last step, enable the "Run Away" mode
     if (step === rejectionSteps.length) {
-        noBtn.addEventListener("mouseenter", moveNoButton);
+        // Add Mouse Hover (Desktop)
+        noBtn.addEventListener("mouseover", moveNoButton);
+        
+        // Add Touch (Mobile) - This fixes the mobile issue
+        noBtn.addEventListener("touchstart", moveNoButton);
+
         noBtn.innerText = "No";
         noBtn.style.backgroundColor = "#ffccd5"; 
     }
 });
 
+// Function to move the button randomly
 function moveNoButton() {
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
     
-    noBtn.style.position = "fixed";
+    noBtn.style.position = "fixed"; // Use fixed to ensure it can go anywhere on screen
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
 }
@@ -78,7 +89,6 @@ yesBtn.addEventListener("click", () => {
         origin: { y: 0.6 }
     });
 
-    // Keep firing confetti for 3 seconds
     var duration = 3 * 1000;
     var end = Date.now() + duration;
 
